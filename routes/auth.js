@@ -10,14 +10,29 @@ const generateToken = (user) => {
     return jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 };
 
+// Middleware for protecting routes
+const authMiddleware = (req, res, next) => {
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: "Access denied" });
+
+    try {
+        const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(401).json({ error: "Invalid token" });
+    }
+};
+
 // Register
 router.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ name, email, password: hashedPassword });
+        const user = new User({ name, email, password: password });
         await user.save();
-        res.status(201).json({ token: generateToken(user), user });
+
+        const token = generateToken(user);
+        res.status(201).json({ id: user._id, name: user.name, email: user.email, token: token });
     } catch (error) {
         res.status(400).json({ error: "User already exists" });
     }
@@ -33,24 +48,11 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-        res.json({ token: generateToken(user), user });
+        const token = generateToken(user);
+        res.json({ id: user._id, name: user.name, email: user.email, token: token });
     } catch (error) {
         res.status(500).json({ error: "Server error" });
     }
 });
-
-// Middleware for protecting routes
-const authMiddleware = (req, res, next) => {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: "Access denied" });
-
-    try {
-        const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: "Invalid token" });
-    }
-};
 
 module.exports = { router, authMiddleware };
