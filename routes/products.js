@@ -2,20 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 
-// Middleware for protecting routes
-const authMiddleware = (req, res, next) => {
-    const token = req.header('Authorization');
-    if (!token) return res.status(401).json({ error: "Access denied" });
-
-    try {
-        const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
-    } catch (error) {
-        res.status(401).json({ error: "Invalid token" });
-    }
-};
-
 // Products Solutions
 router.get('/solutions', (req, res) => {
     const solutions = [
@@ -42,4 +28,4 @@ router.get('/solutions', (req, res) => {
     res.status(200).json(solutions);
 });
 
-module.exports = { router, authMiddleware };
+module.exports = { router };
