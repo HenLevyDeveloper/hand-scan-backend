@@ -25,4 +25,4 @@ router.get('/solutions', (req, res) => {
     ]);
 });
 
-module.exports = router;
+module.exports = { router };
