@@ -17,7 +17,7 @@ const authMiddleware = (req, res, next) => {
 };
 
 // Products Solutions
-app.get('/solutions', (req, res) => {
+router.get('/solutions', (req, res) => {
     const solutions = [
         { 
             id: "0",
