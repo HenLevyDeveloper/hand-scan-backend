@@ -47,28 +47,30 @@ router.get('/body-parts', (req, res) => {
     },
     {
         "id": "2",
-        "name": "Thumb",
-        "image": "https://www.publicdomainpictures.net/pictures/180000/velka/hand-with-thumb-up.jpg"
+        "name": "Elbow",
+        "image": "https://excelsportspt.com/wp-content/uploads/2020/03/shutterstock_1523898098.jpg"
+        
     },
     {
         "id": "3",
+        "name": "Ankle",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/74/Ankle.jpg"
+        
+    },
+    {
+        "id": "4",
+        "name": "Knee",
+        "image": "https://www.londonbridgeorthopaedics.co.uk/wp-content/uploads/2024/06/knee.jpg"
+    },
+    {
+        "id": "5",
         "name": "Forearm",
         "image": "https://paincareclinic.co.uk/wp-content/uploads/2023/08/forearm.png"
     },
     {
-        "id": "4",
-        "name": "Elbow",
-        "image": "https://excelsportspt.com/wp-content/uploads/2020/03/shutterstock_1523898098.jpg"
-    },
-    {
-        "id": "5",
-        "name": "Hand",
-        "image": "https://i.pinimg.com/736x/16/3b/a5/163ba5058014b2b8aada92fc10947301.jpg"
-    },
-    {
         "id": "6",
-        "name": "Ankle",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/7/74/Ankle.jpg"
+        "name": "Thumb",
+        "image": "https://www.publicdomainpictures.net/pictures/180000/velka/hand-with-thumb-up.jpg"
     },
     {
         "id": "7",
@@ -82,8 +84,8 @@ router.get('/body-parts', (req, res) => {
     },
     {
         "id": "9",
-        "name": "Knee",
-        "image": "https://www.londonbridgeorthopaedics.co.uk/wp-content/uploads/2024/06/knee.jpg"
+        "name": "Hand",
+        "image": "https://i.pinimg.com/736x/16/3b/a5/163ba5058014b2b8aada92fc10947301.jpg"
     }
 ]);
 });
