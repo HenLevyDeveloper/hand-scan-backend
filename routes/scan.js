@@ -47,7 +47,7 @@ router.post("/generate-presigned-url", async (req, res) => {
       console.error("Error generating pre-signed URL", error);
       res.status(500).json({ error: "Could not generate URL" });
     }
-  });
+});
 
 // Get all scans for a user
 router.get("/scans/:userId", async (req, res) => {
@@ -60,7 +60,7 @@ router.get("/scans/:userId", async (req, res) => {
       console.error("Error fetching scans", error);
       res.status(500).json({ error: "Could not fetch scans" });
     }
-  });
+});
 
 // Body Parts
 router.get('/body-parts', (req, res) => {
