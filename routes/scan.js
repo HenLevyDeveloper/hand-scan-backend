@@ -2,7 +2,6 @@ const express = require('express');
 const multer = require('multer');
 const AWS = require('aws-sdk');
 const Scan = require('../models/Scan');
-const { authMiddleware } = require('./auth');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
