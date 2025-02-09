@@ -1,10 +1,10 @@
+require("dotenv").config();
 const express = require('express');
 const multer = require('multer');
 const AWS = require('aws-sdk');
 const Scan = require('../models/Scan');
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() });
 
 AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY,
