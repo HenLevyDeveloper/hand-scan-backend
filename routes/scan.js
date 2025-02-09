@@ -16,7 +16,7 @@ AWS.config.update({
 const s3 = new AWS.S3();
 
 // Generate a pre-signed URL
-router.post("/generate-presigned-url", async (req, res) => {
+router.post('/generate-presigned-url', async (req, res) => {
     const { userId, fileName } = req.body;
   
     if (!userId || !fileName) {
@@ -50,7 +50,7 @@ router.post("/generate-presigned-url", async (req, res) => {
 });
 
 // Get all scans for a user
-router.get("/scans/:userId", async (req, res) => {
+router.get('/scans/:userId', async (req, res) => {
     const { userId } = req.params;
   
     try {
