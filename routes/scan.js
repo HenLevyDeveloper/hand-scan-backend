@@ -15,27 +15,52 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-// Upload Scan Route
-router.post('/upload', authMiddleware, upload.single('scan'), async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
-    const params = {
-        Bucket: process.env.AWS_BUCKET_NAME,
-        Key: `scans/${Date.now()}_${req.file.originalname}`,
-        Body: req.file.buffer,
-        ContentType: req.file.mimetype,
-    };
-
-    try {
-        const s3Upload = await s3.upload(params).promise();
-        const newScan = new Scan({ userId: req.user.id, scanUrl: s3Upload.Location });
-        await newScan.save();
-        res.json({ message: "Scan uploaded", scanUrl: s3Upload.Location });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
+// Generate a pre-signed URL
+router.post("/generate-presigned-url", async (req, res) => {
+    const { userId, fileName } = req.body;
+  
+    if (!userId || !fileName) {
+      return res.status(400).json({ error: "Missing userId or fileName" });
     }
-});
+  
+    const key = `scans/${userId}/${Date.now()}_${fileName}`; // Unique key for the file
+    const params = {
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: key,
+      Expires: 60 * 5, // URL expires in 5 minutes
+      ContentType: "application/octet-stream", // For .usdz files
+    };
+  
+    try {
+      const uploadUrl = await s3.getSignedUrlPromise("putObject", params);
+  
+      // Save the reference to MongoDB
+      const scan = new Scan({
+        userId,
+        key,
+        url: `https://${params.Bucket}.s3.${AWS.config.region}.amazonaws.com/${key}`,
+      });
+      await scan.save();
+  
+      res.json({ uploadUrl, key });
+    } catch (error) {
+      console.error("Error generating pre-signed URL", error);
+      res.status(500).json({ error: "Could not generate URL" });
+    }
+  });
 
+// Get all scans for a user
+router.get("/scans/:userId", async (req, res) => {
+    const { userId } = req.params;
+  
+    try {
+      const scans = await Scan.find({ userId });
+      res.json(scans);
+    } catch (error) {
+      console.error("Error fetching scans", error);
+      res.status(500).json({ error: "Could not fetch scans" });
+    }
+  });
 
 // Body Parts
 router.get('/body-parts', (req, res) => {
