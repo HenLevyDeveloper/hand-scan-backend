@@ -61,6 +61,26 @@ router.get('/scans/:userId', async (req, res) => {
     }
 });
 
+// Generate a pre-signed URL for viewing
+router.get('/scans/:userId/presigned-url/:fileKey', async (req, res) => {
+    const { userId, fileKey } = req.params;
+
+    const params = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `scans/${userId}/${fileKey}`, // File path
+        Expires: 300, // URL expires in 5 minutes
+    };
+
+    try {
+        const presignedUrl = await s3.getSignedUrlPromise("getObject", params);
+        res.json({ presignedUrl });
+    } catch (error) {
+        console.error("❌ Error generating pre-signed URL:", error);
+        res.status(500).json({ error: "Could not generate pre-signed URL" });
+    }
+});
+
+
 // Body Parts
 router.get('/body-parts', (req, res) => {
     res.json([
