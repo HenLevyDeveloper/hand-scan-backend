@@ -53,21 +53,11 @@ router.get('/scans/:userId', async (req, res) => {
     const { userId } = req.params;
   
     try {
-        const scans = await Scan.find({ userId });
-
-        // Convert `_id` to `id`
-        const formattedScans = scans.map(scan => ({
-            id: scan._id.toString(),
-            userId: scan.userId,
-            key: scan.key,
-            url: scan.url,
-            createdAt: scan.createdAt,
-        }));
-
-        res.json(formattedScans);
+      const scans = await Scan.find({ userId });
+      res.json(scans);
     } catch (error) {
-        console.error("Error fetching scans", error);
-        res.status(500).json({ error: "Could not fetch scans" });
+      console.error("Error fetching scans", error);
+      res.status(500).json({ error: "Could not fetch scans" });
     }
 });
 
